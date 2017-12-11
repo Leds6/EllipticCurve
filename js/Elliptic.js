@@ -245,7 +245,7 @@ class Elliptic {
 				this.canvas.context.fill();
 
 				if(this.pointsToAdd.length % 2 == 0) {
-					//this.drawLine();
+					this.drawLine();
 					let result = this.sum(this.pointsToAdd[0], this.pointsToAdd[1])
 					this.canvas.context.fillStyle = COLOR_C;
 					content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x + ', ' + result.y + ')</span>';
@@ -301,28 +301,43 @@ class Elliptic {
 
 	    	let point = this.animationLine(this, start, end, progress);
 
-	    	if(point.x >= this.m - 1 || point.x <= 0) {
-	    		let vector = new Point(end.x - start.x, end.y - start.y)
+	    	if(point.x >= this.m-1) {				
+				let vector = new Point(end.x - start.x, end.y - start.y);
 	    		start.x = 0;
-	    		start.y = point.y
-	    		end.x = start.x + vector.x
-	    		end.y = start.y + vector.y
+	    		start.y = point.y;
+	    		end.x = start.x + vector.x;
+	    		end.y = start.y + vector.y;
 	    		progress.amount = 0; 
-	    	} else if(point.y >= this.m - 1 || point.y <= 0) {
-	    		let vector = new Point(end.x - start.x, end.y - start.y)
+			} else if(point.y >= this.m-1) {				
+				let vector = new Point(end.x - start.x, end.y - start.y);
 	    		start.y = 0;
-	    		start.x = point.x
-	    		end.x = start.x + vector.x
-	    		end.y = start.y + vector.y
+	    		start.x = point.x;
+	    		end.x = start.x + vector.x;
+	    		end.y = start.y + vector.y;
 	    		progress.amount = 0; 
-	    	}
+				} else if(point.x <= 0) {					
+					let vector = new Point(end.x - start.x, end.y - start.y);
+					start.x = this.m-1;
+					start.y = point.y;
+					end.x = start.x + vector.x;
+					end.y = start.y + vector.y;
+					progress.amount = 0; 
+					} else if(point.y <= 0) {					
+						let vector = new Point(end.x - start.x, end.y - start.y);
+						start.y = this.m-1;
+						start.x = point.x;
+						end.x = start.x + vector.x;
+						end.y = start.y + vector.y;
+						progress.amount = 0; 
+						}
+					
 
 	    }, 30);
 
 	}
 
 	animationLine(that, start, end, progress) {
-		progress.amount += 0.05; 
+		progress.amount += 0.01; 
 		var amount = progress.amount
         that.canvas.context.beginPath();
         //that.canvas.context.clearRect(0, 0, canvas.width, canvas.height);
