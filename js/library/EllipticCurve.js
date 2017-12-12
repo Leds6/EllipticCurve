@@ -179,9 +179,11 @@ class EllipticCurve {
     div(endPoint, startPoint, mode) {
         switch (mode) {
             default:
-                let tempPoint = startPoint;
-                while(tempPoint)
-
+                let n = 1;
+                while(mul(startPoint, n) != endPoint){
+                    n++;
+                }
+                return n;
                 break;
         }
     }
