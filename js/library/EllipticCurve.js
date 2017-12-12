@@ -1,7 +1,7 @@
 if (typeof require === 'function') {
-    var Scalar = require('./Scalar');
-    var Point = require('./Point');
-    var ModuloField = require('./fields/ModuloField');
+    Scalar = require('./Scalar');
+    Point = require('./Point');
+    ModuloField = require('./fields/ModuloField');
 }
 
 /**
