@@ -14,6 +14,7 @@
 			</div>
 		</div>
 
+
 		<div id="right_column">
 			<h1 class="title">ELLIPTIC CURVE</h1>
 			<div class="card" >
@@ -32,11 +33,11 @@
 					<button class="Bouton" name="mul">Multiplication</button>
 					<button class="Bouton" name="div">Division</button>
 				</div>
-
 				
 				<div id="content_container">
-					<div id="info" name="m1">Click on a point (add)</div>
-					<div id="info" class="tonDiv" name="m2">Click on a point (mult)</BR> Enter n :<input type="number" name="n" id="n"></div>
+					<div id="info" name="m1">Click on a point.</div>
+					<div id="info" class="tonDiv" name="m2">Click on a point.</BR> Enter n :<input type="number" name="n" id="n"></div>
+					<div id="info" name="nP">Click on the final point nP and on the initial point P.</div>
 					<p id="content" class="menu_card_content"></p>
 				</div>
 			</div>
@@ -67,26 +68,26 @@
 	<script>
         let canvas = new Canvas(document.querySelector('#canvas'), document.querySelector('#m'));
         canvas.draw();
-		//var canvas = new Canvas()
+		//var canvas = new Canvas();
 
-//        refresh();
-//        var input = document.querySelectorAll('input');
-//        for(var i=0;i<input.length;i++){
-//            input[i].addEventListener('change', function(){
-//                refresh();
-//            });
-//            function refresh() {
-//                a = a_dom.value;
-//                b = b_dom.value;
-//                m = m_dom.value;
-//                n = n_dom.value
-//                ellipticCurve = new Elliptic(a, b, m, 'canvas');
-//                ellipticCurve.drawModulo();
-//            }
-//
-//
-//        }
-	/*
+/*        refresh();
+        var input = document.querySelectorAll('input');
+        for(var i=0;i<input.length;i++){
+            input[i].addEventListener('change', function(){
+                refresh();
+            });
+            function refresh() {
+                a = a_dom.value;
+                b = b_dom.value;
+                m = m_dom.value;
+                n = n_dom.value
+                ellipticCurve = new Elliptic(a, b, m, 'canvas');
+                ellipticCurve.drawModulo();
+            }
+
+
+        }
+	
 		let ellipticCurve;
 
 		let a = -7;
@@ -118,7 +119,7 @@
 			a = a_dom.value;
 			b = b_dom.value;
 			m = m_dom.value;
-			n = n_dom.value
+			n = n_dom.value;
 			ellipticCurve = new Elliptic(a, b, m, 'canvas');
 			ellipticCurve.drawModulo();
 		}
@@ -126,7 +127,7 @@
 
 		// Click on canvas
 
-		var canvas = document.querySelector('#canvas');
+		//var canvas = document.querySelector('#canvas');
 
 		canvas.addEventListener('click', function(e) {
 			var x;
@@ -146,21 +147,25 @@
 		});
 		
 		// button function
-		
+	*/	
 	document.querySelector("[name='add']").onclick = function() {
-		if (window.getComputedStyle(document.querySelector("[name='m2']")).display == "block"){
+		if (window.getComputedStyle(document.querySelector("[name='m2']")).display == "block" || 
+				window.getComputedStyle(document.querySelector("[name='nP']")).display == "block"){
 			document.querySelector("[name='m2']").style.display="none";
+			document.querySelector("[name='nP']").style.display="none";
 		}
 		if (window.getComputedStyle(document.querySelector("[name='m1']")).display == 'none'){
 			document.querySelector("[name='m1']").style.display="block";
 		} else {
 			document.querySelector("[name='m1']").style.display="none";
-		}
-		
+		}	
 	}
+
 	document.querySelector("[name='mul']").onclick = function() {
-		if (window.getComputedStyle(document.querySelector("[name='m1']")).display == "block"){
+		if (window.getComputedStyle(document.querySelector("[name='m1']")).display == "block" ||
+			 	window.getComputedStyle(document.querySelector("[name='nP']")).display == "block"){
 			document.querySelector("[name='m1']").style.display="none";
+			document.querySelector("[name='nP']").style.display="none";
 		}
 		if (window.getComputedStyle(document.querySelector("[name='m2']")).display == 'none'){
 			document.querySelector("[name='m2']").style.display="block";
@@ -168,8 +173,20 @@
 			document.querySelector("[name='m2']").style.display="none";
 		}
 	}
-
-	*/
+	
+	document.querySelector("[name='div']").onclick = function() {
+		if (window.getComputedStyle(document.querySelector("[name='m1']")).display == "block" ||
+				window.getComputedStyle(document.querySelector("[name='m2']")).display == "block"){
+			document.querySelector("[name='m1']").style.display="none";
+			document.querySelector("[name='m2']").style.display="none";
+		}
+		if (window.getComputedStyle(document.querySelector("[name='nP']")).display == 'none'){
+			document.querySelector("[name='nP']").style.display="block";
+		} else {
+			document.querySelector("[name='nP']").style.display="none";
+		}
+	}
+	
 	</script>
 </body>
 </html>
