@@ -66,29 +66,9 @@
 	<script type="text/javascript" src="js/ModuloCanvas.js"></script>
 
 	<script>
-        let canvas = new Canvas(document.querySelector('#canvas'), document.querySelector('#m'));
-        canvas.draw();
-		//var canvas = new Canvas();
-
-/*        refresh();
-        var input = document.querySelectorAll('input');
-        for(var i=0;i<input.length;i++){
-            input[i].addEventListener('change', function(){
-                refresh();
-            });
-            function refresh() {
-                a = a_dom.value;
-                b = b_dom.value;
-                m = m_dom.value;
-                n = n_dom.value
-                ellipticCurve = new Elliptic(a, b, m, 'canvas');
-                ellipticCurve.drawModulo();
-            }
-
-
-        }
+        
 	
-		let ellipticCurve;
+		//let ellipticCurve;
 
 		let a = -7;
 		let b = 10;
@@ -104,7 +84,7 @@
 		m_dom.value = m;
 		n_dom.value = n;
 
-		refresh();
+		//refresh();
 
 
 		// Refresh on input change
@@ -119,15 +99,20 @@
 			a = a_dom.value;
 			b = b_dom.value;
 			m = m_dom.value;
-			n = n_dom.value;
-			ellipticCurve = new Elliptic(a, b, m, 'canvas');
+			n = n_dom.value
+			ellipticCurve = new Elliptic(a, b);
 			ellipticCurve.drawModulo();
+			let canvas = new Canvas(document.querySelector('#canvas'), document.querySelector('#m'));
+			canvas.draw();
 		}
+		
+		let canvas = new Canvas(document.querySelector('#canvas'), document.querySelector('#m'));
+        canvas.draw();
 
-
+/*
 		// Click on canvas
 
-		//var canvas = document.querySelector('#canvas');
+		var canvas = document.querySelector('#canvas');
 
 		canvas.addEventListener('click', function(e) {
 			var x;
@@ -145,9 +130,9 @@
 
 			ellipticCurve.click(new Point(x, y));
 		});
-		
+*/
 		// button function
-	*/	
+	
 	document.querySelector("[name='add']").onclick = function() {
 		if (window.getComputedStyle(document.querySelector("[name='m2']")).display == "block" || 
 				window.getComputedStyle(document.querySelector("[name='nP']")).display == "block"){
