@@ -7,6 +7,7 @@ class Canvas {
         m.addEventListener('change', function(){
             that.draw();
             console.log('ppppp')
+            console.log(m.value)
             that.cellsByLine = parseFloat(m.value);
         });
 
@@ -48,7 +49,7 @@ class Canvas {
             this.context.fillText(i, 20, this.canvas.height - i * cell_width - cell_width * 2 + 5);
             if(!document.querySelector('#displayGrid').checked) {
                 this.context.moveTo(50, x + cell_width);
-                this.context.lineTo(this.canvas.width, x + cell_width);
+                this.context.lineTo(this.width, x + cell_width);
             }
         }
 
