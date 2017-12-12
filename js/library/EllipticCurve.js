@@ -176,6 +176,15 @@ class EllipticCurve {
         }
 	}
 
+    /**
+    * Divides an end point nP by the start point P in order to find n.
+    * @param {Point} nP point to divide
+    * @param {Point} P start point of the multiplication which found nP
+    * @param {String} mode for the division
+    * @returns {int} n number of multiplication to find nP
+    * @example
+    *
+    */
     div(endPoint, startPoint, mode) {
         switch (mode) {
             default:
