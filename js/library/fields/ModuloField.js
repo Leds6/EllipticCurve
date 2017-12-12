@@ -1,4 +1,4 @@
-if (typeof require === 'function') var Field = require('./Field');
+if (typeof require === 'function') Field = require('./Field');
 
 class ModuloField extends Field {
 
