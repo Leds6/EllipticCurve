@@ -5,9 +5,8 @@ class Canvas {
 
 	    let that = this;
         m.addEventListener('change', function(){
+			that.cellsByLine = parseFloat(m.value);
             that.draw();
-            console.log('ppppp')
-            that.cellsByLine = parseFloat(m.value);
         });
 
 
@@ -16,46 +15,45 @@ class Canvas {
 		this.cellsByLine = parseFloat(m.value);
 		this.cell_width = this.canvas.width / (this.cellsByLine + 2);
 		this.context.font = "15px Arial";
-        console.log(this.cellsByLine)
 	}
 
 	draw() {
-	    console.log('aze');
         this.clear();
 
         this.solutions = [];
 
-        let cell_width = this.canvas.width / (this.cellsByLine + 2);
+        this.cell_width = this.canvas.width / (this.cellsByLine + 2);
+	
 
         this.context.fillStyle = "gray";
-        console.log(this.cellsByLine);
         // Vertical lignes
         for (let i = 0; i < this.cellsByLine; i ++) {
-            console.log('a');
-            let x = i * cell_width;
+            let x = i * this.cell_width;
             this.context.textAlign="center";
-            this.context.fillText(i,x + cell_width + 50, this.canvas.height - 10);
+            this.context.fillText(i,x + this.cell_width + 50, this.canvas.height - 10);
             if(!document.querySelector('#displayGrid').checked) {
-                this.context.moveTo(x + cell_width + 50, 0, 50);
-                this.context.lineTo(this.x_coord(i), this.canvas.height - cell_width);
+                //this.context.moveTo(x + cell_width + 50, 0, 50);
+                //this.context.lineTo(this.x_coord(i), this.canvas.height - cell_width);
+				this.context.moveTo(x + this.cell_width+50, 0);
+                this.context.lineTo(this.x_coord(i), this.canvas.height - this.cell_width);
             }
         }
 
         // Horizontal lines
         for (let i = 0; i < this.cellsByLine; i ++) {
-            let x = i * cell_width;
+			let x = i * this.cell_width;
             this.context.textAlign="center";
-            this.context.fillText(i, 20, this.canvas.height - i * cell_width - cell_width * 2 + 5);
+            this.context.fillText(i, 20, this.canvas.height - i * this.cell_width - this.cell_width * 2 + 5);
             if(!document.querySelector('#displayGrid').checked) {
-                this.context.moveTo(50, x + cell_width);
-                this.context.lineTo(this.canvas.width, x + cell_width);
+                this.context.moveTo(50, x + this.cell_width);
+                this.context.lineTo(this.canvas.width, x + this.cell_width);
             }
         }
 
         this.context.lineWidth=1;
         this.context.strokeStyle = "gray";
         this.context.stroke();
-
+		
 
         // for(let x = 0; x < this.cellsByLine; x++) {
         //     let ys = this.calc(x);
