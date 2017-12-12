@@ -25,6 +25,11 @@ class Canvas {
 		this.canvas = canvas;
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "15px Arial";
+	}
+
+	draw() {
+        this.clear();
+
 		/* Points on the curve */
 		this.points = [];
 		this.selectedPoints = [];
@@ -73,7 +78,7 @@ class Canvas {
 
         // Horizontal lines
         for (let i = 0; i < this.cellsByLine; i ++) {
-            let x = i * this.cell_width;
+			let x = i * this.cell_width;
             this.context.textAlign="center";
             this.context.fillText(i, 20, this.canvas.height - i * this.cell_width - this.cell_width * 2 + 5);
             if(!document.querySelector('#displayGrid').checked) {
@@ -86,7 +91,7 @@ class Canvas {
         this.context.lineWidth=1;
         this.context.strokeStyle = "gray";
         this.context.stroke();
-
+		
 
         // for(let x = 0; x < this.cellsByLine; x++) {
         //     let ys = this.calc(x);
