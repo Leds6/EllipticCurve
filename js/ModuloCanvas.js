@@ -1,7 +1,9 @@
-class Canvas {
+const POINT_SIZE = 6;
 
-	constructor(canvas, m) {
+const CURVE_SIZE = 2;
+const CURVE_COLOR = '#aaaaaa';
 
+const TRIGGER_CLICK_DISTANCE = Math.pow(POINT_SIZE, 2) * 3;
 
 	    let that = this;
         m.addEventListener('change', function(){
@@ -10,46 +12,74 @@ class Canvas {
             console.log(m.value)
             that.cellsByLine = parseFloat(m.value);
         });
+const COLOR_A = 'blue';
+const COLOR_B = 'purple';
+const COLOR_C = 'orange';
 
+const LINE_DRAWING_SPEED = 7;
+
+class Canvas {
+
+	constructor(canvas) {
 
 		this.canvas = canvas;
 		this.context = this.canvas.getContext("2d");
-		this.cellsByLine = parseFloat(m.value);
-		this.cell_width = this.canvas.width / (this.cellsByLine + 2);
 		this.context.font = "15px Arial";
-        console.log(this.cellsByLine)
+		/* Points on the curve */
+		this.points = [];
+		this.selectedPoints = [];
+
+        let that = this;
+        this.canvas.addEventListener('click', function(e) {
+            var x;
+            var y;
+            if (e.pageX || e.pageY) {
+                x = e.pageX;
+                y = e.pageY;
+            } else {
+                x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            }
+
+            x -= canvas.offsetLeft;
+            y -= canvas.offsetTop;
+
+            that.click(x, y);
+        });
+
+
 	}
 
-	draw() {
-	    console.log('aze');
-        this.clear();
+	drawGrid(m) {
+
+	    this.moduloField = new ModuloField(parseFloat(m));
+        this.cellsByLine = this.moduloField.m;
 
         this.solutions = [];
 
-        let cell_width = this.canvas.width / (this.cellsByLine + 2);
+        this.cell_width = this.canvas.width / (this.cellsByLine + 2);
 
         this.context.fillStyle = "gray";
-        console.log(this.cellsByLine);
         // Vertical lignes
         for (let i = 0; i < this.cellsByLine; i ++) {
-            console.log('a');
-            let x = i * cell_width;
+            let x = i * this.cell_width;
             this.context.textAlign="center";
-            this.context.fillText(i,x + cell_width + 50, this.canvas.height - 10);
+            this.context.fillText(i,x + this.cell_width + 50, this.canvas.height - 10);
             if(!document.querySelector('#displayGrid').checked) {
-                this.context.moveTo(x + cell_width + 50, 0, 50);
-                this.context.lineTo(this.x_coord(i), this.canvas.height - cell_width);
+                this.context.moveTo(this.x_coord(i), 0);
+                this.context.lineTo(this.x_coord(i), this.canvas.height - this.cell_width);
             }
         }
 
         // Horizontal lines
         for (let i = 0; i < this.cellsByLine; i ++) {
-            let x = i * cell_width;
+            let x = i * this.cell_width;
             this.context.textAlign="center";
-            this.context.fillText(i, 20, this.canvas.height - i * cell_width - cell_width * 2 + 5);
+            this.context.fillText(i, 20, this.canvas.height - i * this.cell_width - this.cell_width * 2 + 5);
             if(!document.querySelector('#displayGrid').checked) {
-                this.context.moveTo(50, x + cell_width);
-                this.context.lineTo(this.width, x + cell_width);
+
+                this.context.moveTo(50, x + this.cell_width);
+                this.context.lineTo(this.canvas.width, x + this.cell_width);
             }
         }
 
@@ -96,6 +126,79 @@ class Canvas {
         //     }
         // }
 	}
+
+	drawEllipticCurve(ellipticCurve) {
+
+        this.points = [];
+        this.selectedPoints = [];
+
+        for(let x = 0; x < this.cellsByLine; x++) {
+            let ys = ellipticCurve.calc(new Scalar(this.moduloField, x));
+            for(let y_indice = 0; y_indice < ys.length; y_indice++) {
+
+                let y = ys[y_indice].y.value;
+
+                // Add solutions points
+                this.points.push(new Point(new Scalar(this.moduloField, x), new Scalar(this.moduloField, y)));
+
+                this.context.beginPath();
+                this.context.fillStyle = "green";
+                this.context.arc(this.x_coord(x), this.y_coord(y),POINT_SIZE,0,2*Math.PI);
+                this.context.fillStyle = "green";
+                this.context.fill();
+                this.context.fillStyle = "green";
+
+            }
+        }
+        console.log(this.points);
+    }
+
+    click(x, y) {
+        if(this.points.length === 0) return;
+
+        let nearestPoint = this.points[0];
+        let bestDistance = Math.pow(x - this.x_coord(this.points[0].x.value), 2) + Math.pow(y - this.y_coord(this.points[0].y.value), 2);
+
+        for(let i = 0; i < this.points.length; i++) {
+            let distance = Math.pow(x - this.x_coord(this.points[i].x.value), 2) + Math.pow(y - this.y_coord(this.points[i].y.value), 2);
+            if(distance < bestDistance) {
+                nearestPoint = this.points[i];
+                bestDistance = distance;
+            }
+        }
+
+        if(bestDistance > TRIGGER_CLICK_DISTANCE) {
+            return;
+        }
+
+        // We have a point !
+
+        /*
+        let found = false;
+
+        for(let i = 0; i < this.selectedPoints.length; i++) {
+            if(this.selectedPoints[i].eq(nearestPoint)) {
+                this.selectedPoints.splice(i, 1);
+                found = true;
+                break;
+            }
+        }
+
+        if(!found) {
+            this.selectedPoints.push(nearestPoint);
+        }*/
+
+        if(this.selectedPoints.length > 1) {
+            this.selectedPoints = [];
+        }
+
+
+        this.selectedPoints.push(nearestPoint);
+
+        console.log(this.selectedPoints);
+
+        
+    }
 
 	clear() {
 		this.context.beginPath();

@@ -19,13 +19,13 @@
 			<h1 class="title">ELLIPTIC CURVE</h1>
 			<div class="card" >
 				<div id="equation">
-					<span>y<sup>2</sup> = x<sup>3</sup> + <input type="number" name="" id="a"> x + <input type="number" name="" id="b"></span></span>
+					<span>y<sup>2</sup> = x<sup>3</sup> + <input type="number" name="" id="a" placeholder="a"> x + <input type="number" name="" id="b" placeholder="b"></span>
 				</div>
 				<div id ="equation_info"></div>
 			</div>
 			<div class="card">
 				Modulo
-				<input type="number" id="m">
+				<input type="number" id="m" placeholder="m">
 			</div>
 			<div class="card menu_card">
 				<div class="menu">
@@ -57,18 +57,64 @@
 			</div>
 		</div>
 
-	
-	
-	
+		<script type="text/javascript" src="js/library/exeptions.js"></script>
+		<script type="text/javascript" src="js/ModuloCanvas.js"></script>
+		<script type="text/javascript" src="js/library/fields/Field.js"></script>
+		<script type="text/javascript" src="js/library/fields/RealField.js"></script>
+		<script type="text/javascript" src="js/library/fields/ModuloField.js"></script>
+		<script type="text/javascript" src="js/library/Scalar.js"></script>
+		<script type="text/javascript" src="js/library/Point.js"></script>
+		<script type="text/javascript" src="js/library/EllipticCurve.js"></script>
 
-	<script type="text/javascript" src="js/Point.js"></script>
-	<script type="text/javascript" src="js/Elliptic.js"></script>
-	<script type="text/javascript" src="js/ModuloCanvas.js"></script>
 
-	<script>
-        
-	
-		//let ellipticCurve;
+		<script>
+        let canvas = new Canvas(document.querySelector('#canvas'));
+        let m, a, b;
+
+        document.querySelector('#m').addEventListener('change', function(){
+            m = parseInt(this.value);
+			draw(m, a, b);
+        });
+
+        document.querySelector('#a').addEventListener('change', function(){
+            a = parseInt(this.value);
+            draw(m, a, b);
+        });
+
+        document.querySelector('#b').addEventListener('change', function(){
+            b = parseInt(this.value);
+            draw(m, a, b);
+        });
+
+        function draw(m, a, b) {
+            canvas.clear();
+            canvas.drawGrid(m);
+            canvas.drawEllipticCurve(new EllipticCurve(a, b));
+		}
+
+
+		//var canvas = new Canvas()
+
+//        refresh();
+//        var input = document.querySelectorAll('input');
+//        for(var i=0;i<input.length;i++){
+//            input[i].addEventListener('change', function(){
+//                refresh();
+//            });
+//            function refresh() {
+//                a = a_dom.value;
+//                b = b_dom.value;
+//                m = m_dom.value;
+//                n = n_dom.value
+//                ellipticCurve = new Elliptic(a, b, m, 'canvas');
+//                ellipticCurve.drawModulo();
+//            }
+//
+//
+//        }
+	/*
+		let ellipticCurve;
+
 
 		let a = -7;
 		let b = 10;

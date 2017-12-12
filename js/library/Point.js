@@ -1,5 +1,5 @@
 if (typeof require === 'function') {
-    var Scalar = require('./Scalar');
+    Scalar = require('./Scalar');
 }
 
 /**
