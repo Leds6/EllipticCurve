@@ -113,82 +113,82 @@ class Elliptic {
     };
 
 	drawModulo() {
-		clearInterval(this.animation);
-		this.canvas.clear();
+        clearInterval(this.animation);
+        this.canvas.clear();
 
-		this.solutions = [];
+        this.solutions = [];
 
-		let cell_width = this.canvas.width / (this.m + 2);
+        let cell_width = this.canvas.width / (this.m + 2);
 
-		this.canvas.context.fillStyle = "gray";
+        this.canvas.context.fillStyle = "gray";
 
-		// Vertical lignes
-		for (let i = 0; i < this.m; i ++) {
-			let x = i * cell_width;
-			this.canvas.context.textAlign="center"; 
-			this.canvas.context.fillText(i,x + cell_width + 50, this.canvas.height - 10);
-			if(!document.querySelector('#displayGrid').checked) {
-			    this.canvas.context.moveTo(x + cell_width + 50, 0, 50);
-			    this.canvas.context.lineTo(this.canvas.x_coord(i), this.canvas.height - cell_width);
-			}
-		}
+        // Vertical lignes
+        for (let i = 0; i < this.m; i ++) {
+            let x = i * cell_width;
+            this.canvas.context.textAlign="center";
+            this.canvas.context.fillText(i,x + cell_width + 50, this.canvas.height - 10);
+            if(!document.querySelector('#displayGrid').checked) {
+                this.canvas.context.moveTo(x + cell_width + 50, 0, 50);
+                this.canvas.context.lineTo(this.canvas.x_coord(i), this.canvas.height - cell_width);
+            }
+        }
 
-		// Horizontal lines
-		for (let i = 0; i < this.m; i ++) {
-			let x = i * cell_width
-			this.canvas.context.textAlign="center"; 
-			this.canvas.context.fillText(i, 20, this.canvas.height - i * cell_width - cell_width * 2 + 5);
-			if(!document.querySelector('#displayGrid').checked) {
-			    this.canvas.context.moveTo(50, x + cell_width);
-			    this.canvas.context.lineTo(this.canvas.width, x + cell_width);
-			}
-		}
+        // Horizontal lines
+        for (let i = 0; i < this.m; i ++) {
+            let x = i * cell_width
+            this.canvas.context.textAlign="center";
+            this.canvas.context.fillText(i, 20, this.canvas.height - i * cell_width - cell_width * 2 + 5);
+            if(!document.querySelector('#displayGrid').checked) {
+                this.canvas.context.moveTo(50, x + cell_width);
+                this.canvas.context.lineTo(this.canvas.width, x + cell_width);
+            }
+        }
 
-		this.canvas.context.lineWidth=1;
-		this.canvas.context.strokeStyle = "gray";
-		this.canvas.context.stroke();
+        this.canvas.context.lineWidth=1;
+        this.canvas.context.strokeStyle = "gray";
+        this.canvas.context.stroke();
 
 
-		for(let x = 0; x < this.m; x++) {
-			let ys = this.calc(x);
-			for(let y_indice = 0; y_indice < ys.length; y_indice++) {
+        for(let x = 0; x < this.m; x++) {
+            let ys = this.calc(x);
+            for(let y_indice = 0; y_indice < ys.length; y_indice++) {
 
-				// Add solutions points
+                // Add solutions points
 
-				this.solutions.push(new Point(x, ys[y_indice]));
+                this.solutions.push(new Point(x, ys[y_indice]));
 
-				this.canvas.context.beginPath();
-				this.canvas.context.fillStyle = "green";
-				this.canvas.context.arc(this.canvas.x_coord(x), this.canvas.y_coord(ys[y_indice]),POINT_SIZE,0,2*Math.PI);
-				this.canvas.context.fillStyle = "green";
-				this.canvas.context.fill();
-				this.canvas.context.fillStyle = "green";
+                this.canvas.context.beginPath();
+                this.canvas.context.fillStyle = "green";
+                this.canvas.context.arc(this.canvas.x_coord(x), this.canvas.y_coord(ys[y_indice]),POINT_SIZE,0,2*Math.PI);
+                this.canvas.context.fillStyle = "green";
+                this.canvas.context.fill();
+                this.canvas.context.fillStyle = "green";
 
-				// Draw curve
-				if(!document.querySelector('#displayCurve').checked) {
-					let k = Math.pow(ys[y_indice], 2) - Math.pow(x, 3) - this.a * x - this.b;
+                // Draw curve
+                if(!document.querySelector('#displayCurve').checked) {
+                    let k = Math.pow(ys[y_indice], 2) - Math.pow(x, 3) - this.a * x - this.b;
 
-					let f = new Elliptic(this.a, this.b + k);
+                    let f = new Elliptic(this.a, this.b + k);
 
-					this.canvas.context.beginPath();
-					let bottom = false;
-					for(var i = -1; i <= this.m + 1; i = i + 0.01) {
-						let y = f.calc(i);
-						//if(isNaN(y)) this.canvas.context.beginPath();
-						
-						if(y > 0 && y <= this.m) this.canvas.context.lineTo(this.canvas.x_coord(i), this.canvas.y_coord(y));
+                    this.canvas.context.beginPath();
+                    let bottom = false;
+                    for(var i = -1; i <= this.m + 1; i = i + 0.01) {
+                        let y = f.calc(i);
+                        //if(isNaN(y)) this.canvas.context.beginPath();
 
-					}
+                        if(y > 0 && y <= this.m) this.canvas.context.lineTo(this.canvas.x_coord(i), this.canvas.y_coord(y));
 
-					this.canvas.context.lineWidth=CURVE_SIZE;
-					this.canvas.context.strokeStyle = CURVE_COLOR;
-					this.canvas.context.stroke();
-					}
-			}
-		}
+                    }
 
-		let equation_info = document.querySelector('#equation_info').innerHTML = "The curve has " + (this.solutions.length + 1) + " points (including the point at infinity).";
-		console.log(this.solutions.length);
+                    this.canvas.context.lineWidth=CURVE_SIZE;
+                    this.canvas.context.strokeStyle = CURVE_COLOR;
+                    this.canvas.context.stroke();
+                }
+            }
+        }
+
+        let equation_info = document.querySelector('#equation_info').innerHTML = "The curve has " + (this.solutions.length + 1) + " points (including the point at infinity).";
+        console.log(this.solutions.length);
 
 	}
 
