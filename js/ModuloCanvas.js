@@ -7,7 +7,6 @@ class Canvas {
         m.addEventListener('change', function(){
             that.draw();
             console.log('ppppp')
-            console.log(m.value)
             that.cellsByLine = parseFloat(m.value);
         });
 
