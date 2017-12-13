@@ -76,8 +76,9 @@ class EllipticCurve {
                     (2.mul(p1.y).mul(p1.z)).mul(A.pow(2).sub(8.mul(p1.x).mul(p1.y).mul(p1.z.pow(2)))),
                     (4.mul(p1.y.pow(2)).mul(p1.z).mul(2.mul(A).mul(p1.x).add(B)).sub(A.pow(3))),
                     (8.mul(p1.y.pow(3)).mul(p1.z.pow(3)))
-                    )
+                    );
             }
+        }
 
         //} else { // If p1 and p2 are not the same point
 			let u = p1.x.mul(p2.z).sub(p2.x.mul(p1.z));
