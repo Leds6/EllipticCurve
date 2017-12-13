@@ -70,12 +70,12 @@ class EllipticCurve {
             if(p1.y.isZero()){           // Point where the tangent in this point is vertical.
                 return new Point(0,1,0); // Point O
             }else{
-                let A = 3.mul(p1.x.pow(2)).add(this.a.mul(p1.z.pow(2)));
-                let B = p1.x.pow(3).sub(this.a.mul(p1.x).mul(p1.z.pow(2))).sub(2.mul(this.b).mul(p1.z.pow(3)));
+                let A = p1.x.pow(2).mul(3).add(this.a.mul(p1.z.pow(2)));
+                let B = p1.x.pow(3).sub(this.a.mul(p1.x).mul(p1.z.pow(2))).sub(this.b.mul(2).mul(p1.z.pow(3)));
                 return new Point(
-                    (2.mul(p1.y).mul(p1.z)).mul(A.pow(2).sub(8.mul(p1.x).mul(p1.y).mul(p1.z.pow(2)))),
-                    (4.mul(p1.y.pow(2)).mul(p1.z).mul(2.mul(A).mul(p1.x).add(B)).sub(A.pow(3))),
-                    (8.mul(p1.y.pow(3)).mul(p1.z.pow(3)))
+                    (p1.y.mul(2).mul(p1.z).mul(A.pow(2).sub(p1.x.mul(8).mul(p1.y.pow(2)).mul(p1.z)))),
+                    (p1.y.pow(2).mul(4).mul(p1.z).mul(A.mul(2).mul(p1.x).add(B)).sub(A.pow(3))),
+                    (p1.y.pow(3).mul(8).mul(p1.z.pow(3)))
                     );
             }
         }
