@@ -182,7 +182,7 @@
 
 
 		// button function
-        window.getComputedStyle(document.querySelector("[name='m1']")).display = "block";
+    document.querySelector("[name='m1']").style.display="block";
 	document.querySelector("[name='add']").onclick = function() {
 		if (window.getComputedStyle(document.querySelector("[name='m2']")).display === "block" ||
 				window.getComputedStyle(document.querySelector("[name='nP']")).display === "block"){
