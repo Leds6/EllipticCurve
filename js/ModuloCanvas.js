@@ -8,9 +8,7 @@ const TRIGGER_CLICK_DISTANCE = Math.pow(POINT_SIZE, 2) * 3;
 	    let that = this;
         m.addEventListener('change', function(){
             that.draw();
-            console.log('ppppp')
-            console.log(m.value)
-            that.cellsByLine = parseFloat(m.value);
+            that.cellsByLine = parseFloat(this.value);
         });
 const COLOR_A = 'blue';
 const COLOR_B = 'purple';
@@ -25,14 +23,6 @@ class Canvas {
 		this.canvas = canvas;
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "15px Arial";
-	}
-
-	draw() {
-        this.clear();
-
-		/* Points on the curve */
-		this.points = [];
-		this.selectedPoints = [];
 
         let that = this;
         this.canvas.addEventListener('click', function(e) {
@@ -48,9 +38,19 @@ class Canvas {
 
             x -= canvas.offsetLeft;
             y -= canvas.offsetTop;
-
             that.click(x, y);
         });
+
+
+	}
+
+	draw() {
+        this.clear();
+
+		/* Points on the curve */
+		this.points = [];
+		this.selectedPoints = [];
+
 
 
 	}
