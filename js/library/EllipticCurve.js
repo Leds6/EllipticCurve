@@ -199,6 +199,23 @@ class EllipticCurve {
     */
     div(endPoint, startPoint, mode) {
         switch (mode) {
+            case Pollard:
+                let mod = startPoint.field.m.value;
+                let valArray=[];
+                let r = startPoint;             // Initial point   R = aP + bQ
+                let aValue = 1;                 // Initial a value
+                let bValue = 0;                 // Initial b value
+                valArray.push([startPoint, aValue, bValue]);
+
+                let i = 0;
+                while(valArray[i][0] !== valArray[i/2][0]){
+                    if(r.y < Math.trunc(mod/3)){
+                        r = sum(r, endPoint);
+                        bValue++;
+                    }
+                    i++;
+                }
+                break;
             default:
                 let n = 1;
                 while(mul(startPoint, n) != endPoint){
@@ -209,5 +226,14 @@ class EllipticCurve {
         }
     }
 }
+
+// Function Greatest common divider
+/*
+var gcd = function(a, b) {
+    if ( ! b) {
+        return a;
+    }
+    return gcd(b, a % b);
+}; */
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') module.exports = EllipticCurve;
