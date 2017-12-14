@@ -182,43 +182,37 @@
 
 
 		// button function
-	
+    document.querySelector("[name='m1']").style.display="block";
 	document.querySelector("[name='add']").onclick = function() {
-		if (window.getComputedStyle(document.querySelector("[name='m2']")).display == "block" || 
-				window.getComputedStyle(document.querySelector("[name='nP']")).display == "block"){
+		if (window.getComputedStyle(document.querySelector("[name='m2']")).display === "block" ||
+				window.getComputedStyle(document.querySelector("[name='nP']")).display === "block"){
 			document.querySelector("[name='m2']").style.display="none";
 			document.querySelector("[name='nP']").style.display="none";
 		}
-		if (window.getComputedStyle(document.querySelector("[name='m1']")).display == 'none'){
+		if (window.getComputedStyle(document.querySelector("[name='m1']")).display === 'none'){
 			document.querySelector("[name='m1']").style.display="block";
-		} else {
-			document.querySelector("[name='m1']").style.display="none";
-		}	
+		}
 	}
 
 	document.querySelector("[name='mul']").onclick = function() {
-		if (window.getComputedStyle(document.querySelector("[name='m1']")).display == "block" ||
-			 	window.getComputedStyle(document.querySelector("[name='nP']")).display == "block"){
+		if (window.getComputedStyle(document.querySelector("[name='m1']")).display === "block" ||
+			 	window.getComputedStyle(document.querySelector("[name='nP']")).display === "block"){
 			document.querySelector("[name='m1']").style.display="none";
 			document.querySelector("[name='nP']").style.display="none";
 		}
-		if (window.getComputedStyle(document.querySelector("[name='m2']")).display == 'none'){
+		if (window.getComputedStyle(document.querySelector("[name='m2']")).display === 'none'){
 			document.querySelector("[name='m2']").style.display="block";
-		} else {
-			document.querySelector("[name='m2']").style.display="none";
 		}
 	}
 	
 	document.querySelector("[name='div']").onclick = function() {
-		if (window.getComputedStyle(document.querySelector("[name='m1']")).display == "block" ||
-				window.getComputedStyle(document.querySelector("[name='m2']")).display == "block"){
+		if (window.getComputedStyle(document.querySelector("[name='m1']")).display === "block" ||
+				window.getComputedStyle(document.querySelector("[name='m2']")).display === "block"){
 			document.querySelector("[name='m1']").style.display="none";
 			document.querySelector("[name='m2']").style.display="none";
 		}
-		if (window.getComputedStyle(document.querySelector("[name='nP']")).display == 'none'){
+		if (window.getComputedStyle(document.querySelector("[name='nP']")).display === 'none'){
 			document.querySelector("[name='nP']").style.display="block";
-		} else {
-			document.querySelector("[name='nP']").style.display="none";
 		}
 	}
 	
