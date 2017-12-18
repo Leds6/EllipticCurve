@@ -268,6 +268,7 @@ class Canvas {
             case 'mult':
 				
                 console.log("mode mult");
+				
 				this.aPoint = nearestPoint;
 				info.innerHTML = 'Now enter an integer n.';
 				content.innerHTML = '<span style="color: ' + COLOR_A + ';">A (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')</span> x ';
@@ -280,7 +281,7 @@ class Canvas {
 				console.log(this.aPoint);
 				let result = this.ellipticCurve.mul(this.aPoint, this.n.value );
 				console.log(result);
-				/*
+				
                 this.context.fillStyle = COLOR_C;
                 content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x.value + ', ' + result.y.value + ')</span>';
                 this.context.beginPath();
@@ -288,7 +289,7 @@ class Canvas {
                 this.context.fillText('C (' + result.x.value + ', ' + result.y.value + ')',this.x_coord(result.x.value), this.y_coord(result.y.value) + 22);
                 this.context.fill();	                
 				
-               
+               /*
 
                 info.innerHTML = 'Here is your result, click on a new point to make another multiplication.';
                 content.innerHTML += '<span style="color: ' + COLOR_B + ';">B (' + this.n.value + ')</span> = ';
