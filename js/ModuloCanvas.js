@@ -1,5 +1,5 @@
 const POINT_SIZE = 6;
-
+ 
 const CURVE_SIZE = 2;
 const CURVE_COLOR = '#aaaaaa';
 
@@ -19,12 +19,13 @@ const LINE_DRAWING_SPEED = 7;
 class Canvas {
 
 	constructor(canvas) {
-	    this.mode = 0; // addition
+	    this.mode = 'mult'; // mode de calcul
 		this.canvas = canvas;
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "15px Arial";
-
+		
         let that = this;
+		this.n = new Scalar(new ModuloField(10), 1);
         this.canvas.addEventListener('click', function(e) {
             let x;
             let y;
@@ -133,7 +134,7 @@ class Canvas {
 	}
 
 	drawEllipticCurve(ellipticCurve) {
-
+		this.ellipticCurve = ellipticCurve;
         this.points = [];
         this.selectedPoints = [];
 
@@ -155,7 +156,7 @@ class Canvas {
 
             }
         }
-        console.log(this.points);
+        
     }
 
     click(x, y) {
@@ -199,21 +200,23 @@ class Canvas {
 
 
         this.selectedPoints.push(nearestPoint);
-        console.log(nearestPoint);
+        //console.log(nearestPoint);
         this.context.beginPath();
         if(this.selectedPoints.length < 2) {
             this.context.fillStyle = COLOR_A;
             this.context.fillText('A (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')',this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value) - 12);
         } else {
-            this.context.fillStyle = COLOR_B;
-            this.context.fillText('B (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')',this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value) - 12);
+			if (this.mode==='add'){
+				this.context.fillStyle = COLOR_B;
+				this.context.fillText('B (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')',this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value) - 12);
+
+			}
         }
         this.context.beginPath();
         this.context.arc(this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value),POINT_SIZE,0,2*Math.PI);
         this.context.fill();
 
-        console.log(this.selectedPoints);
-
+		
         this.context.beginPath();
 
         let info = document.querySelector('#info');
@@ -221,73 +224,105 @@ class Canvas {
 
         switch(this.mode) {
             case 'add':
-                if(this.selectedPoints.length % 2 == 0) {
+				//console.log("mode add");
+                if(this.selectedPoints.length % 2 == 1) {
                     if(this.selectedPoints.length != 0) {
                         this.pointsToAdd = [];
-                        this.drawModulo();
+                        //this.drawModulo();
                     }
+					console.log('numro1');
                     this.pointsToAdd.push(nearestPoint);
                     info.innerHTML = 'Click on the second point to add.';
-                    content.innerHTML = '<span style="color: ' + COLOR_A + ';">A (' + nearestPoint.x + ', ' + nearestPoint.y + ')</span> + ';
-                    this.canvas.context.fillStyle = COLOR_A;
-                    this.canvas.context.fillText('A (' + nearestPoint.x + ', ' + nearestPoint.y + ')',this.canvas.x_coord(nearestPoint.x), this.canvas.y_coord(nearestPoint.y) - 12);
+                    content.innerHTML = '<span style="color: ' + COLOR_A + ';">A (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')</span> + ';
+                    this.context.fillStyle = COLOR_A;
+                    //this.context.fillText('A (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')',this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value) - 12);
                 } else {
+					console.log('numero2');
                     this.pointsToAdd.push(nearestPoint);
                     info.innerHTML = 'Here is your result, click on a point to make another addition.';
-                    content.innerHTML += '<span style="color: ' + COLOR_B + ';">B (' + nearestPoint.x + ', ' + nearestPoint.y + ')</span> = ';
-                    this.canvas.context.fillStyle = COLOR_B;
-                    this.canvas.context.fillText('B (' + nearestPoint.x + ', ' + nearestPoint.y + ')',this.canvas.x_coord(nearestPoint.x), this.canvas.y_coord(nearestPoint.y) + 22);
+                    content.innerHTML += '<span style="color: ' + COLOR_B + ';">B (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')</span> = ';
+                    this.context.fillStyle = COLOR_B;
+                    //this.context.fillText('B (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')',this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value) + 22);
                 }
-                this.canvas.context.beginPath();
-                this.canvas.context.arc(this.canvas.x_coord(nearestPoint.x), this.canvas.y_coord(nearestPoint.y),POINT_SIZE,0,2*Math.PI);
-                this.canvas.context.fill();
+                this.context.beginPath();
+                this.context.arc(this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value),POINT_SIZE,0,2*Math.PI);
+                this.context.fill();
 
                 if(this.pointsToAdd.length % 2 == 0) {
-                    this.drawLine();
-                    let result = this.sum(this.pointsToAdd[0], this.pointsToAdd[1])
-                    this.canvas.context.fillStyle = COLOR_C;
-                    content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x + ', ' + result.y + ')</span>';
-                    this.canvas.context.beginPath();
-                    this.canvas.context.arc(this.canvas.x_coord(result.x), this.canvas.y_coord(result.y),POINT_SIZE,0,2*Math.PI);
-                    this.canvas.context.fillText('C (' + result.x + ', ' + result.y + ')',this.canvas.x_coord(result.x), this.canvas.y_coord(result.y) + 22);
-                    this.canvas.context.fill();
-                    console.log(this.sum(this.pointsToAdd[0], this.pointsToAdd[1]));
+                    //this.drawLine();
+					let p = new Point(this.pointsToAdd[0].x, this.pointsToAdd[0].y);
+					let q = new Point(this.pointsToAdd[1].x, this.pointsToAdd[1].y);
+                    let result = this.ellipticCurve.sum(p,q);
+					console.log(result);
+                    this.context.fillStyle = COLOR_C;
+                    content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x.value + ', ' + result.y.value + ')</span>';
+                    this.context.beginPath();
+                    this.context.arc(this.x_coord(result.x.value), this.y_coord(result.y.value),POINT_SIZE,0,2*Math.PI);
+                    this.context.fillText('C (' + result.x.value + ', ' + result.y.value + ')',this.x_coord(result.x.value), this.y_coord(result.y.value) + 22);
+                    this.context.fill();
+                    //console.log(this.sum(this.pointsToAdd[0], this.pointsToAdd[1]));
                 }
 
                 break;
 
             case 'mult':
-                console.log("ABCD");
-                this.aPoint = nearestPoint;
-                info.innerHTML = 'Now enter an integer n.';
-                content.innerHTML = '<span style="color: ' + COLOR_A + ';">A (' + nearestPoint.x + ', ' + nearestPoint.y + ')</span> + ';
-                this.canvas.context.fillStyle = COLOR_A;
-                this.canvas.context.fillText('A (' + nearestPoint.x + ', ' + nearestPoint.y + ')',this.canvas.x_coord(nearestPoint.x), this.canvas.y_coord(nearestPoint.y) - 12);
+				
+                console.log("mode mult");
+				this.aPoint = nearestPoint;
+				info.innerHTML = 'Now enter an integer n.';
+				content.innerHTML = '<span style="color: ' + COLOR_A + ';">A (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')</span> x ';
+				this.context.fillStyle = COLOR_A;
+				this.context.fillText('A (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')',this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value) - 12);
+				
+				//console.log(this.n);
+				content.innerHTML += '<span style="color: ' + COLOR_B + ';">B (' + this.n.value + ')</span> = ';
+				console.log(this.n.value);
+				console.log(this.aPoint);
+				let result = this.ellipticCurve.mul(this.aPoint, this.n.value );
+				console.log(result);
+				/*
+                this.context.fillStyle = COLOR_C;
+                content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x.value + ', ' + result.y.value + ')</span>';
+                this.context.beginPath();
+                this.context.arc(this.x_coord(result.x.value), this.y_coord(result.y.value),POINT_SIZE,0,2*Math.PI);
+                this.context.fillText('C (' + result.x.value + ', ' + result.y.value + ')',this.x_coord(result.x.value), this.y_coord(result.y.value) + 22);
+                this.context.fill();	                
+				
+               
 
                 info.innerHTML = 'Here is your result, click on a new point to make another multiplication.';
-                content.innerHTML += '<span style="color: ' + COLOR_B + ';">B (' + this.n + ')</span> = ';
-                this.canvas.context.fillStyle = COLOR_B;
-                this.canvas.context.fillText('B (' + this.n + ')',this.n);
+                content.innerHTML += '<span style="color: ' + COLOR_B + ';">B (' + this.n.value + ')</span> = ';
+                this.context.fillStyle = COLOR_B;
+				console.log(this.n.value)
+                this.context.fillText('B (' + this.n.value + ')',this.n.value);
 
-                this.canvas.context.beginPath();
-                this.canvas.context.arc(this.canvas.x_coord(nearestPoint.x), this.canvas.y_coord(nearestPoint.y),POINT_SIZE,0,2*Math.PI);
-                this.canvas.context.fill();
-                console.log(this.n);
-                let result = this.mult(this.aPoint, this.n)
-                this.canvas.context.fillStyle = COLOR_C;
-                content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x + ', ' + result.y + ')</span>';
-                this.canvas.context.beginPath();
-                this.canvas.context.arc(this.canvas.x_coord(result.x), this.canvas.y_coord(result.y),POINT_SIZE,0,2*Math.PI);
-                this.canvas.context.fillText('C (' + result.x + ', ' + result.y + ')',this.canvas.x_coord(result.x), this.canvas.y_coord(result.y) + 22);
-                this.canvas.context.fill();
-                console.log(this.mult(this.aPont, this.n));
-
+                this.context.beginPath();
+                this.context.arc(this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value),POINT_SIZE,0,2*Math.PI);
+                this.context.fill();
+                let result = this.mult(this.aPoint, this.n.value)
+                this.context.fillStyle = COLOR_C;
+                content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x.value + ', ' + result.y.value + ')</span>';
+                this.context.beginPath();
+                this.context.arc(this.x_coord(result.x.value), this.y_coord(result.y.value),POINT_SIZE,0,2*Math.PI);
+                this.context.fillText('C (' + result.x.value + ', ' + result.y.value + ')',this.x_coord(result.x.value), this.y_coord(result.y.value) + 22);
+                this.context.fill();
+                //console.log(this.mult(this.aPont, this.n));
+*/
                 break;
+				
+			case 'div':
+				//console.log("mode div");
+				break;
         }
 
 
     }
-
+	
+	n_valueSet(n){
+		this.n = new Scalar(moduloField, parseInt(this.n));
+		return this.n;
+	}
+	
 	clear() {
 		this.context.beginPath();
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);

@@ -35,9 +35,9 @@
 				</div>
 				
 				<div id="content_container">
-					<div id="info" name="m1">Click on a point.</div>
-					<div id="info" class="tonDiv" name="m2">Click on a point.</BR> Enter n :<input type="number" name="n" id="n"></div>
-					<div id="info" name="nP">Click on the final point nP and on the initial point P.</div>
+					<div id="info" name="m1"></div>
+					<div id="info" class="tonDiv" name="m2"></BR> Enter n :<input type="number" name="n" id="n"></div>
+					<div id="info" name="nP"></div>
 					<p id="content" class="menu_card_content"></p>
 				</div>
 			</div>
@@ -65,14 +65,14 @@
 		<script type="text/javascript" src="js/library/Scalar.js"></script>
 		<script type="text/javascript" src="js/library/Point.js"></script>
 		<script type="text/javascript" src="js/library/EllipticCurve.js"></script>
-
-
+		
 		<script>
         let canvas = new Canvas(document.querySelector('#canvas'));
-        let m, a, b;
-
+        let m, a, b, n, moduloField;
+		
         document.querySelector('#m').addEventListener('change', function(){
             m = parseInt(this.value);
+			moduloField  = new ModuloField(m);
 			draw(m, a, b);
         });
 
@@ -91,6 +91,13 @@
             canvas.drawGrid(m);
             canvas.drawEllipticCurve(new EllipticCurve(a, b));
 		}
+		
+		document.querySelector('#n').addEventListener('change', function(){
+            let n = parseInt(this.value);
+			canvas.n = new Scalar(moduloField, n);
+			console.log(canvas.n.field,canvas.n.value);
+			draw(m, a, b);
+        });
 
 
 		//var canvas = new Canvas()
@@ -183,6 +190,7 @@
 
 		// button function
     document.querySelector("[name='m1']").style.display="block";
+	
 	document.querySelector("[name='add']").onclick = function() {
 		if (window.getComputedStyle(document.querySelector("[name='m2']")).display === "block" ||
 				window.getComputedStyle(document.querySelector("[name='nP']")).display === "block"){
@@ -191,6 +199,7 @@
 		}
 		if (window.getComputedStyle(document.querySelector("[name='m1']")).display === 'none'){
 			document.querySelector("[name='m1']").style.display="block";
+			
 		}
 	}
 

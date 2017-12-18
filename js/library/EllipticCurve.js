@@ -61,7 +61,6 @@ class EllipticCurve {
 	sum(p1, p2) {
         // Check if p1 is neutral
         if(p1.z.isZero()) { return p2;}
-
         // Check if p2 is neutral
         if(p2.z.isZero()) { return p1;}
 
