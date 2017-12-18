@@ -14,17 +14,23 @@ if (typeof require === 'function') {
 class Point {
 	constructor(x, y, z = null) {
 
-	    // Check if x, y, z are on the same Field
+        if(z === null) z = new Scalar(x.field, 1);
+
+        // Check if x, y, z are on the same Field
 	    if(x.field !== y.field || (z!== null && y.field !== z.field)) {
             throw 'PointWithCoordOnDifferentFields';
         }
 
-		this.x = x;
-		this.y = y;
+        if(!z.isZero()) {
+	        x = x.div(z)
+	        y = y.div(z)
+            z = new Scalar(x.field, 1);
+        }
 
-		if(z === null) this.z = new Scalar(this.x.field, 1);
-        else this.z = z;
-	}
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
     /**
      * Check if two points are equal
@@ -37,7 +43,9 @@ class Point {
      * p2.eq(p1) // True
      */
 	eq(p) {
-		return this.x.eq(p.x) && this.y.eq(p.y) && this.z.eq(p.z);
+        return (this.x.mul(p.y).sub(p.x.mul(this.y)).isZero() &&
+            this.y.mul(p.z).sub(p.y.mul(this.z)).isZero() &&
+            this.x.mul(p.z).sub(p.x.mul(this.z)).isZero());
     }
 }
 

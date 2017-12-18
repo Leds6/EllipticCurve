@@ -2,7 +2,12 @@ if (typeof require === 'function') {
     Scalar = require('./Scalar');
     Point = require('./Point');
     ModuloField = require('./fields/ModuloField');
+    const {
+        performance
+    } = require('perf_hooks');
 }
+
+const DIV_MAX_N = 100000;
 
 /**
  * Elliptic Curve class
@@ -60,44 +65,35 @@ class EllipticCurve {
      */
 	sum(p1, p2) {
         // Check if p1 is neutral
-        if(p1.z.isZero()) { return p2;}
-        // Check if p2 is neutral
-        if(p2.z.isZero()) { return p1;}
-
-		// If p1 and p2 are the same point
-        if(p1.eq(p2)) {
-            if(p1.y.isZero()){           // Point where the tangent in this point is vertical.
-                return new Point(0,1,0); // Point O
-            }else{
-                let A = p1.x.pow(2).mul(3).add(this.a.mul(p1.z.pow(2)));
-                let B = p1.x.pow(3).sub(this.a.mul(p1.x).mul(p1.z.pow(2))).sub(this.b.mul(2).mul(p1.z.pow(3)));
-                return new Point(
-                    (p1.y.mul(2).mul(p1.z).mul(A.pow(2).sub(p1.x.mul(8).mul(p1.y.pow(2)).mul(p1.z)))),
-                    (p1.y.pow(2).mul(4).mul(p1.z).mul(A.mul(2).mul(p1.x).add(B)).sub(A.pow(3))),
-                    (p1.y.pow(3).mul(8).mul(p1.z.pow(3)))
-                    );
-            }
+        if (p1.z.isZero()) {
+            return p2;
         }
 
-        //} else { // If p1 and p2 are not the same point
-			let u = p1.x.mul(p2.z).sub(p2.x.mul(p1.z));
-			let v = p1.y.mul(p2.z).sub(p2.y.mul(p1.z));
-			let w = p1.x.mul(p2.y).sub(p2.x.mul(p1.y));
-			let s = p1.x.mul(p2.z).add(p2.x.mul(p1.z));
-			let t = p1.z.mul(p2.z);
-			let z = t.mul(u.pow(3));
-			if(z.isZero()) {
-                return new Point(
-                    (t.mul(u).mul(v.pow(2)).sub(s.mul(u.pow(3)))),
-                    (s.mul(u.pow(2)).mul(v).sub(t.mul(u.pow(2)).mul(w)).sub(t.mul(v.pow(3)))),
-                    z);
-            } else {
-                return new Point(
-                    (t.mul(u).mul(v.pow(2)).sub(s.mul(u.pow(3)))).div(z),
-                    (s.mul(u.pow(2)).mul(v).sub(t.mul(u.pow(2)).mul(w)).sub(t.mul(v.pow(3)))).div(z));
-            }
-		//}
+        // Check if p2 is neutral
+        if (p2.z.isZero()) {
+            return p1;
+        }
 
+        // If p1 and p2 are the same point
+        if (p1.eq(p2)) {
+            let A = p1.x.pow(2).mul(3).add(p1.z.pow(2).mul((this.a)));
+            let B = p1.x.pow(3).sub(p1.x.mul(p1.z.pow(2)).mul(this.a)).sub(p1.z.pow(3).mul(2).mul(this.b));
+            return new Point(
+                p1.y.mul(2).mul(p1.z).mul(A.pow(2).sub(p1.x.mul(8).mul(p1.y.pow(2)).mul(p1.z))),
+                p1.y.pow(2).mul(4).mul(p1.z).mul(A.mul(2).mul(p1.x).add(B)).sub(A.pow(3)),
+                p1.y.pow(3).mul(8).mul(p1.z.pow(3))
+            );
+        } else { // If p1 and p2 are not the same point
+            let u = p1.x.mul(p2.z).sub(p2.x.mul(p1.z));
+            let v = p1.y.mul(p2.z).sub(p2.y.mul(p1.z));
+            let w = p1.x.mul(p2.y).sub(p2.x.mul(p1.y));
+            let s = p1.x.mul(p2.z).add(p2.x.mul(p1.z));
+            let t = p1.z.mul(p2.z);
+            return new Point(
+                (t.mul(u).mul(v.pow(2)).sub(s.mul(u.pow(3)))),
+                (s.mul(u.pow(2)).mul(v).sub(t.mul(u.pow(2)).mul(w)).sub(t.mul(v.pow(3)))),
+                t.mul(u.pow(3)));
+        }
 		/*
 		let m;
 
@@ -142,6 +138,7 @@ class EllipticCurve {
      * Multiplies two points of the curve
      * @param {Point} p point to multiply
      * @param {Number} d value to multiply
+     * @param mode
      * @param {Enum} d value to multiply
      * @returns {Point} Result point
      * @example
@@ -151,24 +148,24 @@ class EllipticCurve {
      * // Return  Point(x = -1, y = -4, z = 1)
      */
 	mul(p, d, mode=null) {
-
+        let sum_count = 0;
 	    switch (mode) {
             case 'repeatedSums':
                 let result = p;
                 while(d > 1) {
                     result = this.sum(result, p);
+                    sum_count++;
                     d--;
                 }
+                console.log('sum_count ' + sum_count);
+                console.log("Execution time " + (t1 - t0) + " milliseconds.");
                 return result;
-                break;
 
             case 'exp3':
 
                 break;
 
             default:
-                // exp2
-
                 let n = p;
                 let q = 0;
                 let binaryString = d.toString(2);
@@ -178,61 +175,33 @@ class EllipticCurve {
                             q =  n;
                         } else {
                             q = this.sum(q, n);
+                            sum_count++;
                         }
                     }
                     n = this.sum(n, n);
+                    sum_count++;
                 }
                 return q;
-                break;
         }
 	}
 
-    /**
-    * Divides an end point nP by the start point P in order to find n.
-    * @param {Point} nP point to divide
-    * @param {Point} P start point of the multiplication which found nP
-    * @param {String} mode for the division
-    * @returns {int} n number of multiplication to find nP
-    * @example
-    *
-    */
     div(endPoint, startPoint, mode) {
+        let result = 1;
         switch (mode) {
-            case Pollard:
-                let mod = startPoint.field.m.value;
-                let valArray=[];
-                let r = startPoint;             // Initial point   R = aP + bQ
-                let aValue = 1;                 // Initial a value
-                let bValue = 0;                 // Initial b value
-                valArray.push([startPoint, aValue, bValue]);
 
-                let i = 0;
-                while(valArray[i][0] !== valArray[i/2][0]){
-                    if(r.y < Math.trunc(mod/3)){
-                        r = sum(r, endPoint);
-                        bValue++;
-                    }
-                    i++;
+            case 'naive':
+                let tempPoint = startPoint;
+                while(!tempPoint.eq(endPoint) && result < DIV_MAX_N) {
+                    tempPoint = this.sum(tempPoint, startPoint);
+                    result++;
                 }
                 break;
+
             default:
-                let n = 1;
-                while(mul(startPoint, n) != endPoint){
-                    n++;
-                }
-                return n;
                 break;
         }
+        return result;
     }
 }
-
-// Function Greatest common divider
-/*
-var gcd = function(a, b) {
-    if ( ! b) {
-        return a;
-    }
-    return gcd(b, a % b);
-}; */
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') module.exports = EllipticCurve;
