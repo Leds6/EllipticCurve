@@ -19,7 +19,7 @@ const LINE_DRAWING_SPEED = 7;
 class Canvas {
 
 	constructor(canvas) {
-	    this.mode = 'mult'; // mode de calcul
+	    this.mode = 'add'; // mode de calcul
 		this.canvas = canvas;
 		this.context = this.canvas.getContext("2d");
 		this.context.font = "15px Arial";

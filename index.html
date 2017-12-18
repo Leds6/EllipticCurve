@@ -199,6 +199,8 @@
 		}
 		if (window.getComputedStyle(document.querySelector("[name='m1']")).display === 'none'){
 			document.querySelector("[name='m1']").style.display="block";
+			canvas.mode = 'add';
+			console.log("changement de mode : add ");
 			
 		}
 	}
@@ -211,6 +213,8 @@
 		}
 		if (window.getComputedStyle(document.querySelector("[name='m2']")).display === 'none'){
 			document.querySelector("[name='m2']").style.display="block";
+			canvas.mode = 'mult';
+			console.log("changement de mode : mult ");
 		}
 	}
 	
@@ -222,6 +226,8 @@
 		}
 		if (window.getComputedStyle(document.querySelector("[name='nP']")).display === 'none'){
 			document.querySelector("[name='nP']").style.display="block";
+			canvas.mode = 'div';
+			console.log("changement de mode : div ");
 		}
 	}
 	
