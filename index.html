@@ -19,13 +19,13 @@
 			<h1 class="title">ELLIPTIC CURVE</h1>
 			<div class="card" >
 				<div id="equation">
-					<span>y<sup>2</sup> = x<sup>3</sup> + <input type="number" name="" id="a" placeholder="a"> x + <input type="number" name="" id="b" placeholder="b"></span>
+					<span>y<sup>2</sup> = x<sup>3</sup> + <input type="number" name="" id="a" placeholder="2"> x + <input type="number" name="" id="b" placeholder="2"></span>
 				</div>
 				<div id ="equation_info"></div>
 			</div>
 			<div class="card">
 				Modulo
-				<input type="number" id="m" placeholder="m">
+				<input type="number" id="m" placeholder="13">
 			</div>
 			<div class="card menu_card">
 				<div class="menu">
@@ -35,9 +35,23 @@
 				</div>
 				
 				<div id="content_container">
-					<div id="info" name="m1"></div>
-					<div id="info" class="tonDiv" name="m2"></BR> Enter n :<input type="number" name="n" id="n"></div>
-					<div id="info" name="nP"></div>
+					<div id="info" name="m1">
+						<div>Choose a point to add</div>
+					</div>
+					
+					<div 
+						id="info" class="tonDiv" name="m2"> Enter n :<input type="number" name="n" id="n" placeholder="4"> 
+						<br/><br/><br/>			
+						<div>You can change the calculation method </div> 
+						<button class="Bouton" name="default">default</button>
+						<button class="Bouton" name="repeatedSums">repeatedSums</button>
+						<button class="Bouton" name="exp3">exp3</button>						
+					</div>
+					
+					<div id="info" name="nP">
+						<div>Choose a point</div>
+					</div>
+					
 					<p id="content" class="menu_card_content"></p>
 				</div>
 			</div>
@@ -68,8 +82,12 @@
 		
 		<script>
         let canvas = new Canvas(document.querySelector('#canvas'));
-        let m, a, b, n, moduloField;
-		
+        //let a, b, m,n,moduloField;
+		let m = 13;		
+		let a = 2;
+		let b = 2;
+		let moduloField,n;
+		draw(m, a, b);
         document.querySelector('#m').addEventListener('change', function(){
             m = parseInt(this.value);
 			moduloField  = new ModuloField(m);
@@ -201,7 +219,7 @@
 			document.querySelector("[name='m1']").style.display="block";
 			canvas.mode = 'add';
 			console.log("changement de mode : add ");
-			
+			draw(m, a, b);			
 		}
 	}
 
@@ -215,6 +233,7 @@
 			document.querySelector("[name='m2']").style.display="block";
 			canvas.mode = 'mult';
 			console.log("changement de mode : mult ");
+			draw(m, a, b);
 		}
 	}
 	
@@ -228,7 +247,29 @@
 			document.querySelector("[name='nP']").style.display="block";
 			canvas.mode = 'div';
 			console.log("changement de mode : div ");
+			draw(m, a, b);
 		}
+	}
+	
+	document.querySelector("[name='exp3']").onclick = function() {
+		canvas.modeCalculMultiplication = 'exp3';	
+		console.log("changement de mode de calcul ");
+		console.log(canvas.modeCalculMultiplication );
+		draw(m, a, b);
+	}
+	
+	document.querySelector("[name='repeatedSums']").onclick = function() {
+		canvas.modeCalculMultiplication = 'repeatedSums';	
+		console.log("changement de mode de calcul ");
+		console.log(canvas.modeCalculMultiplication );	
+		draw(m, a, b);
+	}
+	
+	document.querySelector("[name='default']").onclick = function() {
+		canvas.modeCalculMultiplication = 'default';	
+		console.log("changement de mode de calcul ");
+		console.log(canvas.modeCalculMultiplication );		
+		draw(m, a, b);
 	}
 	
 	</script>
