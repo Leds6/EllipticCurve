@@ -26,7 +26,7 @@ class Canvas {
 		this.context.font = "15px Arial";
 		
         let that = this;
-		this.n = new Scalar(new ModuloField(10), 4);
+		this.n = new Scalar(new ModuloField(13), 4);
         this.canvas.addEventListener('click', function(e) {
             let x;
             let y;
@@ -194,7 +194,6 @@ class Canvas {
         if(!found) {
             this.selectedPoints.push(nearestPoint);
         }*/
-
         if(this.selectedPoints.length > 1) {
             this.selectedPoints = [];
         }
@@ -207,7 +206,7 @@ class Canvas {
             this.context.fillStyle = COLOR_A;
             this.context.fillText('A (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')',this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value) - 12);
         } else {
-			if (this.mode==='add'){
+			if (this.mode==='add'||this.mode==='div'){
 				this.context.fillStyle = COLOR_B;
 				this.context.fillText('B (' + nearestPoint.x.value + ', ' + nearestPoint.y.value + ')',this.x_coord(nearestPoint.x.value), this.y_coord(nearestPoint.y.value) - 12);
 
@@ -222,13 +221,14 @@ class Canvas {
 
         let info = document.querySelector('#info');
         let content = document.querySelector('#content');
-
+		
         switch(this.mode) {
             case 'add':
 				//console.log("mode add");
                 if(this.selectedPoints.length % 2 == 1) {
                     if(this.selectedPoints.length != 0) {
-                        this.pointsToAdd = [];
+						this.pointsToAdd = [];
+						
                         //this.drawModulo();
                     }
 					//console.log('numro1');
@@ -278,17 +278,32 @@ class Canvas {
 				
 				//console.log(this.n);
 				content.innerHTML += '<span style="color: ' + COLOR_B + ';">B (' + this.n.value + ')</span> = ';
-				console.log(this.n.value);
-				console.log(this.aPoint);
-				let result = this.ellipticCurve.mul(this.aPoint, this.n.value, this.modeCalculMultiplication );
-				console.log(result);
+								
+				for (let i=1 ; i <= this.n.value;i++) {
+					//console.log(this.n.value);
+					//console.log(this.n.field);
+					
+					let transition = new Scalar(this.n.field,i);
+					let result = this.ellipticCurve.mul(this.aPoint, transition.value, this.modeCalculMultiplication );
+					this.context.fillStyle = COLOR_C;
+					if (i == this.n.value){
+						content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x.value + ', ' + result.y.value + ')</span>';
+						this.context.beginPath();
+						this.context.fillStyle = COLOR_B;
+						this.context.arc(this.x_coord(result.x.value), this.y_coord(result.y.value),POINT_SIZE,0,2*Math.PI);
+						this.context.fillText('n='+ i ,this.x_coord(result.x.value), this.y_coord(result.y.value) + 22);
+						this.context.fill();
+					}	else{
+					this.context.beginPath();
+					this.context.arc(this.x_coord(result.x.value), this.y_coord(result.y.value),POINT_SIZE,0,2*Math.PI);
+					this.context.fillText('n='+ i,this.x_coord(result.x.value), this.y_coord(result.y.value) + 22);
+					this.context.fill();
+					}				
+					
+					
+				}
 				
-                this.context.fillStyle = COLOR_C;
-                content.innerHTML += '<span style="color: ' + COLOR_C + ';">C (' + result.x.value + ', ' + result.y.value + ')</span>';
-                this.context.beginPath();
-                this.context.arc(this.x_coord(result.x.value), this.y_coord(result.y.value),POINT_SIZE,0,2*Math.PI);
-                this.context.fillText('C (' + result.x.value + ', ' + result.y.value + ')',this.x_coord(result.x.value), this.y_coord(result.y.value) + 22);
-                this.context.fill();	                
+                                
 				
                /*
 
@@ -376,4 +391,13 @@ class Canvas {
 		y = this.canvas.height - this.cell_width * parseFloat(y) - this.cell_width * 2;
 		return y;
 	}
+	
+	sleep(milliseconds) {
+		var start = new Date().getTime();
+		for (var i = 0; i < 1e7; i++) {
+		if ((new Date().getTime() - start) > milliseconds){
+		break;
+		}
+	}
+}
 }

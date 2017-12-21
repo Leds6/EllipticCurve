@@ -157,8 +157,8 @@ class EllipticCurve {
                     sum_count++;
                     d--;
                 }
-                console.log('sum_count ' + sum_count);
-                console.log("Execution time " + (t1 - t0) + " milliseconds.");
+                //console.log('sum_count ' + sum_count);
+                //console.log("Execution time " + (t1 - t0) + " milliseconds.");
                 return result;
 
             case 'exp3':
